@@ -25,7 +25,6 @@ public class UserService {
                 .orElse(null) ;
     }
     public void addUser(AppUser appUser) {
-        appUser.setId(appUsers.size()) ;
         appUsers.add(appUser) ;
     }
     public void deleteUser(long id) {

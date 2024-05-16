@@ -1,7 +1,11 @@
 package com.RestApiTemplate.RestApiTemplate.Controllers;
 
 import com.RestApiTemplate.RestApiTemplate.ErrorHandling.PostNotFoundException;
+import com.RestApiTemplate.RestApiTemplate.ErrorHandling.UserNotFoundException;
+import com.RestApiTemplate.RestApiTemplate.Repositories.PostRepo;
+import com.RestApiTemplate.RestApiTemplate.Repositories.UserRepo;
 import com.RestApiTemplate.RestApiTemplate.Services.PostService;
+import com.RestApiTemplate.RestApiTemplate.commons.AppUser;
 import com.RestApiTemplate.RestApiTemplate.commons.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +17,26 @@ import java.util.List;
 public class PostController {
     @Autowired
     PostService postService ;
-    @GetMapping("/posts")
-    public List<Post> getPosts() {
-        return postService.getPosts() ;
-    }
-    @PostMapping("/posts")
-    public String createPost(@RequestBody Post post) {
-        postService.addPost(post) ;
-        return "200 : Post created" ;
-    }
-    @GetMapping("/posts/{id}")
-    public Post getPostById(@PathVariable long id) {
-        Post post = postService.getPostById(id) ;
-        if(post == null){
-            throw new PostNotFoundException("Post not found") ;
+    @Autowired
+    PostRepo postRepo ;
+    @Autowired
+    UserRepo userRepo ;
+    @GetMapping("/users/{id}/posts")
+    public List<Post> getPostsForUser(@PathVariable long id) {
+        if(userRepo.findById(id).isEmpty()) {
+            throw new UserNotFoundException("User with id: " + id + " does not exist") ;
         }
-        return post ;
+        return userRepo.findById(id).get().getPosts() ;
+    }
+    @PostMapping("/users/{id}/posts")
+    public String createPost(@RequestBody Post post, @PathVariable long id) {
+        AppUser appUser = userRepo.findById(id).get() ;
+        post.setAppUser(appUser); ;
+        if(userRepo.findById(post.getAppUser().getId()).isEmpty())
+            throw new UserNotFoundException("User with id: " + post.getAppUser().getId() + " does not exist") ;
+        postRepo.save(post) ;
+        userRepo.findById(post.getAppUser().getId()).get().getPosts().add(post) ;
+        return "200 : Post created" ;
     }
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<String> deletePost(@PathVariable long id) {
