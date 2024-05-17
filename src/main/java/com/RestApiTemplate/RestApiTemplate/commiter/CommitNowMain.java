@@ -9,23 +9,39 @@ import java.util.Properties;
 public class CommitNowMain {
     private static String remoteBranchName ;
     private static String localBranchName ;
-    public static void main(String[] args) throws IOException {///789
+    public static void main(String[] args) throws IOException {///0
         /// + test if they have https or ssh protocol
         /// if they have ssh return 1 go through
         /// if they have http use the application.properties to get pat token, and set the remote url accordingly
         getProperties() ;
-        String freshestCommit ;
-        String oldestCommit ;
-        oldestCommit = getOldestUnpushedCommit();
-        freshestCommit = getFreshestCommit();
+        String freshestCommit = getFreshestCommit() ;
+        String oldestCommit = getOldestUnpushedCommit();
         System.out.println(freshestCommit + " " + oldestCommit);
         if(freshestCommit == null || oldestCommit == null){
             System.out.println("Nothing to push, branch up to date");
             return ;
         }
+        runCommand("git rev-parse HEAD");
         setHeadToSha1(oldestCommit);
+        System.out.println(freshestCommit + " " + oldestCommit);
         push() ;
+        runCommand("git rev-parse HEAD");
         setHeadToSha1(freshestCommit);
+        runCommand("git rev-parse HEAD");
+    }
+    private static void runCommand(String command) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(command.split(" "));
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private static void getProperties() throws IOException {
         Properties properties = new Properties();
