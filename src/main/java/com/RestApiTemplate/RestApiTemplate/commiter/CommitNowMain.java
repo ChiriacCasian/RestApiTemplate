@@ -23,7 +23,7 @@ public class CommitNowMain {
             System.out.println("Nothing to push, branch up to date");
             return ;
         }
-        setHeadToSha1(getOldestUnpushedCommit());
+        setHeadToSha1(oldestCommit);
         push() ;
         setHeadToSha1(freshestCommit);
     }
