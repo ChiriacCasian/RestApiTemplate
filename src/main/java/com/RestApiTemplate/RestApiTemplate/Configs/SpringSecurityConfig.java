@@ -19,5 +19,6 @@ public class SpringSecurityConfig {
         /// disable CSRF
         http.csrf(CsrfConfigurer::disable);
         return http.build();
+        /// this is just so i can commit
     }
 }

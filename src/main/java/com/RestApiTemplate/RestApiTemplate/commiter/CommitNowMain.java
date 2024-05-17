@@ -15,6 +15,7 @@ public class CommitNowMain {
         String oldestCommit ;
         oldestCommit = getOldestUnpushedCommit();
         freshestCommit = getFreshestCommit();
+        System.out.println(freshestCommit + " " + oldestCommit);
         if(freshestCommit == null || oldestCommit == null){
             System.out.println("Nothing to push, branch up to date");
             return ;
@@ -25,7 +26,7 @@ public class CommitNowMain {
     }
     private static void getProperties() throws IOException {
         Properties properties = new Properties();
-        FileInputStream in = new FileInputStream("src/application.properties");
+        FileInputStream in = new FileInputStream("src/main/resources/application.properties");
         properties.load(in);
         in.close();
         remoteBranchName = properties.getProperty("remote_branch_name");
