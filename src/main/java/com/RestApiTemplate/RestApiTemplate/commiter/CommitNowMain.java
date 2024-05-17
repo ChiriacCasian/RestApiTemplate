@@ -9,7 +9,7 @@ import java.util.Properties;
 public class CommitNowMain {
     private static String remoteBranchName ;
     private static String localBranchName ;
-    public static void main(String[] args) throws IOException {///01
+    public static void main(String[] args) throws IOException {///012
         /// + test if they have https or ssh protocol
         /// if they have ssh return 1 go through
         /// if they have http use the application.properties to get pat token, and set the remote url accordingly
@@ -21,13 +21,10 @@ public class CommitNowMain {
             System.out.println("Nothing to push, branch up to date");
             return ;
         }
-        runCommand("git rev-parse HEAD");
         setHeadToSha1(oldestCommit);
         System.out.println(freshestCommit + " " + oldestCommit);
         push() ;
-        runCommand("git rev-parse HEAD");
         setHeadToSha1(freshestCommit);
-        runCommand("git rev-parse HEAD");
     }
     private static void runCommand(String command) {
         ProcessBuilder processBuilder = new ProcessBuilder();
@@ -84,8 +81,11 @@ public class CommitNowMain {
         return reader.readLine() ;
     }
     private static void setHeadToSha1(String sha1) throws IOException {
+        runCommand("git rev-parse HEAD");
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = Arrays.asList("git", "reset", "--soft", sha1) ;
         processBuilder.command(command).start() ;
+        runCommand("git rev-parse HEAD");
+        System.out.println("HEAD supposed to be set to " + sha1);
     }
 }
