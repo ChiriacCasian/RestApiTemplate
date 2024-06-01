@@ -9,7 +9,7 @@ import java.util.Properties;
 public class CommitNowMain { /// 1233123
     private static String remoteBranchName ;
     private static String localBranchName ;
-    public static void main(String[] args) throws IOException {///0131245
+    public static void main(String[] args) throws IOException {///013124555
         /// + test if they have https or ssh protocol
         /// if they have ssh return 1 go through
         /// if they have http use the application.properties to get pat token, and set the remote url accordingly
