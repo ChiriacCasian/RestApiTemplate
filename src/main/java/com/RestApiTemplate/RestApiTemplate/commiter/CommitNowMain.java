@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class CommitNowMain { /// 224141
+public class CommitNowMain { /// 22414112
     private static String remoteBranchName ;
     private static String localBranchName ;
     public static void main(String[] args) throws IOException {///6781245
